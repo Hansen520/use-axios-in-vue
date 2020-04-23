@@ -1,6 +1,6 @@
 <template>
   <div>
-<!-- 联系人列表 -->
+<!-- 联系人的列表 -->
 <van-popup v-model="showList" position="bottom">
   <van-contact-list
     :list="list"
