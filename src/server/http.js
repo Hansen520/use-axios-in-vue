@@ -24,6 +24,8 @@ for (let key in service) {
     // 配置参数
     config = {}
   ){
+
+    // post中的form-data
     let newParams = {};
     // contact-type是否是form-data的判断
     if(params && isFormData) {
@@ -34,13 +36,16 @@ for (let key in service) {
         newParams.append(i, params[i])
       }
     } else {
+      // 如果没有表单请求，直接将params或者data赋值
       newParams = params
     }
 
+    // 去请求的返回值
+    let response = {};
     // 不同请求的判断
-    let response = {};//去请求的返回值
     if(api.method === 'put' || api.method === 'post' || api.method === 'patch'){
       try {
+        // 用await可以直接获取数据 ,axios请求配置的写法，其实config就是配置的信息，包裹params，data，outtime等等
         response = await instance[api.method](api.url, newParams, config)
       } catch (err) {
         response = err
