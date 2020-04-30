@@ -25,6 +25,8 @@
 
 // vant组件库
 import { ContactList, Popup, ContactEdit, Toast} from 'vant'
+// 导入接口
+import { getContantList, newContactJson, editContact, deleteContact} from '../server/contact'
 
 export default {
 name: 'contactList',
@@ -47,13 +49,13 @@ components:{
     [ContactEdit.name]: ContactEdit
 },
 created() {
-  
   this.getList()
+  // getContantList()
 },
-methods: {
+methods: { 
   // 获取联系人列表
-    async getList(){
-      let res = await this.$http.getContactList()
+   async getList(){
+      let res = await getContantList()
       this.list = res.data
     },
   // 添加联系人
@@ -71,7 +73,7 @@ methods: {
   async onSave(info){
     if(this.isEdit){
       // 编辑保存
-      let res = await this.$http.editContact(
+      let res = await editContact(
         info
       )
       if(res.code === 200){
@@ -81,7 +83,7 @@ methods: {
       }     
     } else{
       // 新建保存
-      // this.instance.post('/contact/new/json', info)
+      // let res = await newContactJson(info)
       //   .then(res => {
       //     if(res.data.code === 200) {
       //       Toast('新建成功')
@@ -89,16 +91,13 @@ methods: {
       //       this.showEdit = false
       //     }
       //   })
-      let res = await this.$http.newContactForm(
-        info,
-        true
-      )
+      let res = await newContactJson(info)
       if(res.code === 200) {
         Toast('新建成功!')
+        
         this.showEdit = false
         this.getList()
       }
-
     }
   },
   // 删除联系人
@@ -116,13 +115,12 @@ methods: {
     // }).catch(()=>{
     //   Toast("请求失败")
     // })
-    let res = await this.$http.deleteContact(
-      {
-        id: info.id
-      }
-    )
+    let res = await deleteContact({
+      id: info.id
+    })
     if(res.code === 200) {
       Toast('删除成功')
+      this.editingContact = {}
       this.showEdit = false
       this.getList()
     }
